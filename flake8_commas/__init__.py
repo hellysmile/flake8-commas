@@ -66,8 +66,17 @@ class CommaChecker(object):
             if (token.string in self.CLOSING_BRACKETS and
                     (idx - 1 > 0) and tokens[idx - 1].type == tokenize.NL and
                     (idx - 2 > 0) and tokens[idx - 2].string != ',' and
-                    (idx - 3 > 0) and tokens[idx - 3].string != '**' and
                     valid_comma_context[-1]):
+
+                reverse_idx = idx - 1
+                previous_row = []
+                reverse_token = tokens[reverse_idx]
+                while reverse_token.start_row == token.start_row - 1:
+                    previous_row.append(reverse_token)
+                    reverse_idx += -1
+                    reverse_token = tokens[reverse_idx]
+                if previous_row[::-1][0].string == '**':
+                    continue
 
                 end_row, end_col = tokens[idx - 2].end
                 yield {
