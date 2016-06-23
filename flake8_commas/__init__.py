@@ -68,15 +68,33 @@ class CommaChecker(object):
                     (idx - 2 > 0) and tokens[idx - 2].string != ',' and
                     valid_comma_context[-1]):
 
-                reverse_idx = idx - 1
-                previous_row = []
-                reverse_token = tokens[reverse_idx]
-                while reverse_token.start_row == token.start_row - 1:
-                    previous_row.append(reverse_token)
-                    reverse_idx += -1
+                if tokens[idx - 2].string in self.CLOSING_BRACKETS and \
+                        tokens[idx - 3].type == tokenize.NL:
+                    reverse_idx = idx - 3
                     reverse_token = tokens[reverse_idx]
-                if previous_row[::-1][0].string == '**':
-                    continue
+                    search_idx = self.CLOSING_BRACKETS.index(tokens[idx - 2].string)
+                    open_str = self.OPENING_BRACKETS[search_idx]
+                    close_str = self.CLOSING_BRACKETS[search_idx]
+                    to_open = 0
+                    while reverse_token.string != open_str or to_open:
+                        if reverse_token.string == close_str:
+                            to_open += 1
+                        elif reverse_token.string == open_str and to_open:
+                            to_open += -1
+                        reverse_idx += -1
+                        reverse_token = tokens[reverse_idx]
+                    if tokens[reverse_idx - 1].string == '**':
+                        continue
+                else:
+                    reverse_idx = idx - 1
+                    previous_row = []
+                    reverse_token = tokens[reverse_idx]
+                    while reverse_token.start_row == token.start_row - 1:
+                        previous_row.append(reverse_token)
+                        reverse_idx += -1
+                        reverse_token = tokens[reverse_idx]
+                    if previous_row[::-1][0].string == '**':
+                        continue
 
                 end_row, end_col = tokens[idx - 2].end
                 yield {
