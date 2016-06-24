@@ -66,6 +66,7 @@ class CommaChecker(object):
             if (token.string in self.CLOSING_BRACKETS and
                     (idx - 1 > 0) and tokens[idx - 1].type == tokenize.NL and
                     (idx - 2 > 0) and tokens[idx - 2].string != ',' and
+                    (idx - 3 > 0) and tokens[idx - 3].string != '*' and
                     (idx - 3 > 0) and tokens[idx - 3].string != '**' and
                     valid_comma_context[-1]):
 
