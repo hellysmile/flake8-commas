@@ -19,7 +19,7 @@ result = function(
 result = function(
     foo,
     bar,
-    **[
+    *[
         a_list,
         of,
         items,
