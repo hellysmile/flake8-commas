@@ -83,7 +83,7 @@ class CommaChecker(object):
                             to_open += -1
                         reverse_idx += -1
                         reverse_token = tokens[reverse_idx]
-                    if tokens[reverse_idx - 1].string == '**':
+                    if tokens[reverse_idx - 1].string in ['*', '**']:
                         continue
                 else:
                     reverse_idx = idx - 1
@@ -93,7 +93,7 @@ class CommaChecker(object):
                         previous_row.append(reverse_token)
                         reverse_idx += -1
                         reverse_token = tokens[reverse_idx]
-                    if previous_row[::-1][0].string == '**':
+                    if previous_row[::-1][0].string in ['*', '**']:
                         continue
 
                 end_row, end_col = tokens[idx - 2].end
