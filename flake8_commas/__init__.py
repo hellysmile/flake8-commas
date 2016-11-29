@@ -1,6 +1,9 @@
 import tokenize
 
-import pep8
+try:
+    import pycodestyle as pep8
+except ImportError:
+    import pep8
 
 from flake8_commas.__about__ import __version__
 
